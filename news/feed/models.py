@@ -8,6 +8,10 @@ from django.db.models.query import QuerySet
 class CustomManager(models.Manager):
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().filter(status=Post.Status.PUBLISHED)
+    
+class TypeManager(models.Manager):
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().filter
 
 
 class Organizations(models.Model):
@@ -17,15 +21,11 @@ class Organizations(models.Model):
     adress = models.CharField()
     email = models.EmailField()
     link = models.TextField()
-    employee = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-    )
 
 
 class Dvision(models.Model):
     name = models.CharField(max_length=40)
-    organizations = models.ForeignKey(Organizations, on_delete=models.CASCADE)
+    organizations = models.ForeignKey(Organizations, on_delete=models.CASCADE, blank=True)
 
 
 class Post(models.Model):
@@ -43,10 +43,12 @@ class Post(models.Model):
         choices=TypeNews.choices,
         default=TypeNews.news
     )
+    divizion = models.ForeignKey(Dvision, on_delete=models.CASCADE)
     title = models.CharField()
     created = models.DateField(auto_now_add=True)
     text = models.TextField()
     publish = models.DateTimeField(default=timezone.now)
+    objects = models.Manager()
     status = models.CharField(
         max_length=2,
         choices=Status.choices,
@@ -72,4 +74,8 @@ class Employee(models.Model):
         max_length=2,
         choices=TypeEmloyee.choices,
         default=TypeEmloyee.EMPLOYEE
+    )
+    division = models.ForeignKey(
+        Dvision,
+        on_delete=models.CASCADE,
     )

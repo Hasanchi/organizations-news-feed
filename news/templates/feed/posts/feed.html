@@ -1,6 +1,10 @@
-{% extends 'feed/base.html' %} {% for post in posts%}
+{% extends 'feed/base.html' %} {% block title %} {{ title }} {% endblock title %} {% block content%}
+{% for post in posts%}
 <div>
-  <p>post.title</p>
+  <h2>{{ post.title }}</h2>
+  <p>{{ post.body }}</p>
 </div>
 
 {% endfor %}
+<div>{% for f in filter%} {{ f }} {% endfor %}</div>
+{% endblock content %}
